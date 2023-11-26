@@ -4,9 +4,9 @@
 
 - [Installation](#installation)
 - [Run scripts](#run-scripts)
-- [Toubleshooting](#troubleshooting)
+- [Troubleshooting](#troubleshooting)
 - [Strategy](#strategy)
-- [Problems faced](#problems-faced)
+- [Demo Video](#demo-video)
 
 ## Installation
 
@@ -19,40 +19,63 @@ pnpm install
 ### Streaming data for spot trading on USDTBTC
 
 ```
-pnpm stream
+python python/execution_stream.py
 ```
 
-This will create a websocket data stream that will receive push notifications from spot trading on the pair USDTBTC.
+This will create a websocket data stream that will receive push notifications from trade executions on the master account.
 
 EXAMPLE RESPONSE
 
-```
+```python
 data {
-  topic: 'publicTrade.BTCUSDT',
-  ts: 1700374747800,
-  type: 'snapshot',
-  data: [
-    {
-      i: '2290000000083262324', // -----> trade ID
-      T: 1700374747798,         // -----> trade timestamp
-      p: '36559.5',             // -----> price of the trade
-      v: '0.000055',            // -----> qty of trade
-      S: 'Buy',                 // -----> trade side, BUY or SELL
-      s: 'BTCUSDT',             // -----> pair symbol
-      BT: false                 // -----> is block trade or not
-    }
-  ],
-  wsKey: 'v5SpotPublic'
+  category: 'spot',
+  symbol: 'BTCUSDT',
+  closedSize: '',
+  execFee: '0.000000318',
+  execId: '2100000000049902216',
+  execPrice: '34576.75',
+  execQty: '0.000318',
+  execType: 'Trade',
+  execValue: '10.99540650',
+  feeRate: '0.001',
+  tradeIv: '',
+  markIv: '',
+  blockTradeId: '',
+  markPrice: '',
+  indexPrice: '',
+  underlyingPrice: '',
+  leavesQty: '0.000000',
+  orderId: '1561932052297946624',
+  orderLinkId: '1700932810291',
+  orderPrice: '0',
+  orderQty: '0.000000',
+  orderType: 'Market',
+  stopOrderType: '',
+  side: 'Buy',
+  execTime: '1700932810282',
+  isLeverage: '0',
+  isMaker: False,
+  seq: 1262245182
 }
 ```
 
-### Executing trades on testnet
+Upon hitting a trade execution on master trader's account the copy trader account will copy the trade details and then make a similar trade.
+
+EXAMPLE RESPONSE OF SUCCESSFUL ORDER ON COPY TRADER ACCOUNT
+
+```python
+response {
+  retCode: 0,
+  retMsg: 'OK',
+  result: {
+    orderId: '1561932064008443136',
+    orderLinkId: '1561932064008443137'
+  },
+  retExtInfo: {},
+  time: 1700932811678
+}
 
 ```
-pnpm execute
-```
-
-This will place a spot order on testnet for a set of hardcoded values. Only test of concept, will create a flexible helper function to create trades later on.
 
 ## Troubleshooting
 
@@ -62,10 +85,8 @@ Choices of vpn for this project is Windscribe. Do download windscribe and connec
 
 ## Strategy
 
-1. Listen to spot trading information through websockets.
-2. Create a callback function to execute trades by copying trade info from a certain user.
+![Flow Graph](./documentation/flow_graph.jpg)
 
-## Problems faced
+## Demo Video
 
-1. Do not understand how to uniquely identify user orders from pool, as far as I understand trades are uniquely indentified by trade ID. (which changes after a trade is completed)
-2. Unable to place trades on testnet due to insufficient funds.
+[Demo Video - Google Drive Link](https://drive.google.com/file/d/1jpTJXPiZDWJJWxewMOCY5KexwSYtA1Tl/view?usp=sharing)

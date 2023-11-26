@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "stream": "npx ts-node copyTrade.ts",
-    "execute": "npx ts-node executeOrder.ts"
+    "node:stream": "npx ts-node nodejs/copyTrade.ts",
+    "node:execute": "npx ts-node nodejs/executeOrder.ts",
+    "py:position": "python python.py"
   },
   "keywords": [],
   "author": "",
